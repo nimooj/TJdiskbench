@@ -51,6 +51,7 @@ END_MESSAGE_MAP()
 
 CTJDiskMark2Dlg::CTJDiskMark2Dlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_TJDISKMARK2_DIALOG, pParent)
+	, file_size(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -59,6 +60,7 @@ void CTJDiskMark2Dlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_COMBO1, m_comboTrialNumber);
+	DDX_OCShort(pDX, IDC_NTGRAPHCTRL6, DISPID(0x5), file_size);
 }
 
 BEGIN_MESSAGE_MAP(CTJDiskMark2Dlg, CDialogEx)
@@ -66,6 +68,7 @@ BEGIN_MESSAGE_MAP(CTJDiskMark2Dlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_CBN_SELCHANGE(IDC_COMBO1, &CTJDiskMark2Dlg::OnCbnSelchangeCombo1)
+	ON_BN_CLICKED(IDC_BUTTON5, &CTJDiskMark2Dlg::OnBnClickedButton5)
 END_MESSAGE_MAP()
 
 
@@ -164,4 +167,19 @@ void CTJDiskMark2Dlg::OnCbnSelchangeCombo1()
 {
 	// TODO: Add your control notification handler code here
 	
+}
+
+
+void CTJDiskMark2Dlg::OnBnClickedButton5()
+{
+	// TODO: Add your control notification handler code here
+}
+BEGIN_EVENTSINK_MAP(CTJDiskMark2Dlg, CDialogEx)
+	ON_EVENT(CTJDiskMark2Dlg, IDC_NTGRAPHCTRL6, 1, CTJDiskMark2Dlg::CursorPositionNtgraphctrl6, VTS_R8 VTS_R8)
+END_EVENTSINK_MAP()
+
+
+void CTJDiskMark2Dlg::CursorPositionNtgraphctrl6(double X, double Y)
+{
+	// TODO: Add your message handler code here
 }

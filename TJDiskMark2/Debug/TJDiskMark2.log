@@ -1,2 +1,40 @@
-﻿  TJDiskMark2.vcxproj -> c:\users\user\documents\visual studio 2015\Projects\TJDiskMark2\Debug\TJDiskMark2.exe
-  TJDiskMark2.vcxproj -> c:\users\user\documents\visual studio 2015\Projects\TJDiskMark2\Debug\TJDiskMark2.pdb (Partial PDB)
+﻿  TJDiskMark2Dlg.cpp
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(13): error C2332: 'class': missing tag name
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(13): error C2628: '<unnamed-tag>' followed by 'short' is illegal (did you forget a ';'?)
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(13): warning C4094: untagged 'class' declared no symbols
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(13): error C2143: syntax error: missing ';' before ':'
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(13): error C2059: syntax error: ':'
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(13): error C2059: syntax error: 'public'
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(14): error C2143: syntax error: missing ';' before '{'
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(14): error C2447: '{': missing function header (old-style formal list?)
+  TJDiskMark2.cpp
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(13): error C2332: 'class': missing tag name
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(13): error C2628: '<unnamed-tag>' followed by 'short' is illegal (did you forget a ';'?)
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(13): warning C4094: untagged 'class' declared no symbols
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(13): error C2143: syntax error: missing ';' before ':'
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(13): error C2059: syntax error: ':'
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(13): error C2059: syntax error: 'public'
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(14): error C2143: syntax error: missing ';' before '{'
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(14): error C2447: '{': missing function header (old-style formal list?)
+  ntgraphctrl6.cpp
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(13): error C2332: 'class': missing tag name
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(13): error C2628: '<unnamed-tag>' followed by 'short' is illegal (did you forget a ';'?)
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(13): warning C4094: untagged 'class' declared no symbols
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(13): error C2143: syntax error: missing ';' before ':'
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(13): error C2059: syntax error: ':'
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(13): error C2059: syntax error: 'public'
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(14): error C2143: syntax error: missing ';' before '{'
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.h(14): error C2447: '{': missing function header (old-style formal list?)
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.cpp(13): error C2062: type 'short' unexpected
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.cpp(13): error C2039: 'CreateObject': is not a member of '`global namespace''
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.cpp(13): error C2143: syntax error: missing ';' before '{'
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.cpp(13): error C2447: '{': missing function header (old-style formal list?)
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.cpp(13): error C2039: '_GetBaseClass': is not a member of '`global namespace''
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.cpp(13): error C2059: syntax error: '}'
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.cpp(13): error C2628: 'CRuntimeClass' followed by 'short' is illegal (did you forget a ';'?)
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.cpp(13): error C2039: 'classshort': is not a member of '`global namespace''
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.cpp(13): error C2332: 'class': missing tag name
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.cpp(13): error C2628: '<unnamed-tag>' followed by 'short' is illegal (did you forget a ';'?)
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.cpp(13): error C2039: 'GetThisClass': is not a member of '`global namespace''
+c:\users\user\documents\visual studio 2015\projects\tjdiskmark2\tjdiskmark2\ntgraphctrl6.cpp(13): error C2039: 'GetRuntimeClass': is not a member of '`global namespace''
+  Generating Code...
