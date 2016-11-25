@@ -169,7 +169,7 @@ void CTJDiskMark2Dlg::OnCbnSelchangeCombo1()
 	
 }
 
-
+www
 void CTJDiskMark2Dlg::OnBnClickedButton5()
 {
 	// TODO: Add your control notification handler code here
