@@ -1,3 +1,5 @@
+
+anes901[8:18 PM]
 // Benchmark.cpp : implementation file
 //
 
@@ -21,13 +23,13 @@ Benchmark::Benchmark(int reqOperation, int op, int size)
 	LARGE_INTEGER start, end, f;
 	QueryPerformanceFrequency(&f);
 
-	if ((reqOperation == THROUGHPUT)&&(op == WRITE))
+	if ((reqOperation == THROUGHPUT) && (op == WRITE))
 	{
 		const unsigned long long uSize = 8ULL * 1024ULL * 1024ULL;
 		unsigned long long tArr[uSize];
 		FILE *pFile;
 		pFile = fopen("file.binary", "wb");
-		
+
 		//http://www.tipssoft.com/bulletin/board.php?bo_table=FAQ&wr_id=735
 
 		QueryPerformanceCounter(&start);
@@ -46,7 +48,7 @@ Benchmark::Benchmark(int reqOperation, int op, int size)
 	{
 
 	}
-	
+
 }
 
 Benchmark::~Benchmark()
@@ -62,5 +64,3 @@ END_MESSAGE_MAP()
 
 
 // Benchmark message handlers
-
-
