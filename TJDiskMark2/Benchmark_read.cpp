@@ -3,8 +3,8 @@
 */
 
 #include "stdafx.h"
-#include "MFCApplication1.h"
-#include "Controller.h"
+#include "TJDiskMark2.h"
+#include "Controller.cpp"
 #include "Benchmark.h"
 #include <stdio.h>
 #include <windows.h>
