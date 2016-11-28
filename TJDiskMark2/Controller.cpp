@@ -35,7 +35,7 @@ void init() {
 	//TCHAR RootPath[4];
 	//wsprintf(RootPath, _T("%c:\\"), drive);
 	testFileDir.Format(_T("\\.\C:\\SBenchMark%80X"), timeGetTime()); // file directory in c drive
-	CreateDirectory(TestFileDir, NULL);
+	CreateDirectory(testFileDir, NULL);
 	testFilePath.Format(_T("%s\\SBenchMark%08X.tmp"), testFileDir, timeGetTime());
 
 }

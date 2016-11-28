@@ -185,6 +185,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BenchMark.h" />
     <ClInclude Include="ntgraphctrl6.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -195,6 +196,9 @@
     <ClInclude Include="_Picture.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BenchMark_read.cpp" />
+    <ClCompile Include="BenchMark_write.cpp" />
+    <ClCompile Include="Controller.cpp" />
     <ClCompile Include="ntgraphctrl6.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
