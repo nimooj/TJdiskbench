@@ -5,25 +5,19 @@
 #include "stdafx.h"
 #include "TJDiskMark2.h"
 #include "Controller.cpp"
-#include "Benchmark.h"
 #include <stdio.h>
 #include <windows.h>
 #include <winbase.h>
 
-int loop = (int)data.trials / data.pageSize;
 
-static void Sequential_read(BenchMarkData* data);
-static void Random_read(BenchMarkData* data);
-
-LongLong Sequential_read(BenchMarkData* data)
+long long Sequential_read(BenchMarkData* data)
 {
-
 	int i, j;
 	BOOL result, wait = TRUE;
 	DWORD readSize;
 	LARGE_INTEGER StartTime, EndTime, ElapsedSeconds;
 	LARGE_INTEGER Freq;
-
+	int loop = (int)data->trials / data->pageSize;
 	static char* p_buffer = (char*)VirtualAlloc(NULL, data->pageSize, MEM_COMMIT, PAGE_READWRITE);
 
 	// create Test File
@@ -36,7 +30,8 @@ LongLong Sequential_read(BenchMarkData* data)
 
 	// kernel-mode access to performance counter
 	// Start Performance Counter
-	StartTime = keQueryPerformanceCounter(&freq);
+	QueryPerformanceFrequency(&Freq);
+	QueryPerformanceCounter(&StartTime);
 	while (wait)
 	{
 		for (j = 0; j < loop; j++)
@@ -45,7 +40,7 @@ LongLong Sequential_read(BenchMarkData* data)
 			result = ReadFile(hFile, p_buffer, data->pageSize, &readSize, NULL);
 
 			// End Performance Counter
-			EndTime = KeQueryPerformanceCounter(NULL);
+			QueryPerformanceCounter(&EndTime);
 
 			if (!result) {
 				// Handle error
@@ -55,9 +50,9 @@ LongLong Sequential_read(BenchMarkData* data)
 		wait = FALSE;
 	}
 	// Format Performance Counter unit to second ( ns to s )
-	ElapsedSeconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
+	ElapsedSeconds.QuadPart = EndTime.QuadPart - StartTime.QuadPart;
 	ElapsedSeconds.QuadPart *= 1000000;
-	ElapsedSeconds.QuadPart /= Frequency.QuadPart;
+	ElapsedSeconds.QuadPart /= Freq.QuadPart;
 
 	return ElapsedSeconds.QuadPart;
 }

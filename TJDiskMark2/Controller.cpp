@@ -1,37 +1,25 @@
+#include "Benchmark.h"
 #include <windows.h>
+#include <atlstr.h>
 #include <iostream>
 
-#define READ   1
-#define WRITE  2
-#define RANDOM 3
-#define SEQ       4
-#define THROUGHPUT 5
-#define INTEGRITY 6
+static long long Sequential_read(BenchMarkData* data);
+static void Random_read(BenchMarkData* data);
 
 BenchMarkData* data;
 
 static CString testFileDir;
 static CString testFilePath;
 
-
-void main_thr() {
-	DWORD thread_id = NULL;
-
-	// Create thread for sequential read and runs it
-	CreateThread(NULL, 0, seq_read, NULL, 0, &thread_id);
-	//CreateThread(NULL, 0, seq_write, NULL, 0, &thread_id);
-
-}
-
 void init() {
-	data = (BenchMarkData*)VirtualAlloc(NULL, );
+	data = (BenchMarkData*) VirtualAlloc(NULL, sizeof(BenchMarkData*), MEM_COMMIT);
 
 	// Get CPU Cache page size
-	SYSTEM_INFO  sysinfo;
+	SYSTEM_INFO sysinfo;
 	GetSystemInfo(&sysinfo);
-	data.pageSize = sysinfo.dwPageSize;
+	data->pageSize = sysinfo->dwPageSize;
 
-	// set test file path
+	// set test file pathu
 	//TCHAR RootPath[4];
 	//wsprintf(RootPath, _T("%c:\\"), drive);
 	testFileDir.Format(_T("\\.\C:\\SBenchMark%80X"), timeGetTime()); // file directory in c drive
@@ -40,9 +28,9 @@ void init() {
 
 }
 
-LongLong seq_read() {
+long long seq_read() {
 	int i;
-	LongLong sr = 0;
+	long long sr = 0;
 	for (i = 0; i < data->trials; i++) {
 		sr += Sequential_read(data);
 		//SetFilePointer(hFile, 0, NULL, FILE_BEGIN);
@@ -52,5 +40,14 @@ LongLong seq_read() {
 }
 
 void seq_write() {
+
+}
+
+void main_thr() {
+	DWORD thread_id;
+
+	// Create thread for sequential read and runs it
+	CreateThread(NULL, 0, seq_read, NULL, 0, &thread_id);
+	//CreateThread(NULL, 0, seq_write, NULL, 0, &thread_id);
 
 }
