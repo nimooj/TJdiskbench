@@ -1,9 +1,9 @@
 #pragma once
 
-class BenchMarkData : public CWnd
+class BenchMarkData //: public CWnd
 {
 public:
-	BenchMarkData(CWnd* pParent = NULL);
+	//BenchMarkData(CWnd* pParent = NULL);
 
 	int trials;
 	double pageSize;
@@ -31,4 +31,4 @@ public:
 	double migration_128G;
 	double migration_256G;
 	double migration_512G;
-}
+};

@@ -1,5 +1,7 @@
 #include "Benchmark.h"
 #include <windows.h>
+#include <stdio.h>
+#pragma comment(lib, "user32.lib")
 #include <atlstr.h>
 #include <iostream>
 
@@ -12,12 +14,11 @@ static CString testFileDir;
 static CString testFilePath;
 
 void init() {
-	data = (BenchMarkData*) VirtualAlloc(NULL, sizeof(BenchMarkData*), MEM_COMMIT);
-
+	data = (BenchMarkData*) VirtualAlloc(NULL, sizeof(BenchMarkData*), MEM_COMMIT, PAGE_READWRITE);
 	// Get CPU Cache page size
 	SYSTEM_INFO sysinfo;
 	GetSystemInfo(&sysinfo);
-	data->pageSize = sysinfo->dwPageSize;
+	data->pageSize = sysinfo.dwPageSize;
 
 	// set test file pathu
 	//TCHAR RootPath[4];
