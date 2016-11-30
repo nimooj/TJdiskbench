@@ -1,2 +1,6 @@
 .vs/
 *.db
+*.opendb
+Debug/
+*.sln
+ipch/
