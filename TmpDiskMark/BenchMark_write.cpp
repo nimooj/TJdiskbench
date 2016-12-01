@@ -3,10 +3,13 @@
 */
 
 #include "stdafx.h"
-#include "TJDiskMark2.h"
-#include "Controller.cpp"
+#include "Benchmark.h"
 #include <stdio.h>
 #include <windows.h>
+#pragma comment(lib, "user32.lib")
+#include <atlstr.h>
+#include <iostream>
+#include <strsafe.h>
 
 long long Sequential_write(BenchMarkData* data) {
 	int i, j;

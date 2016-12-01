@@ -66,6 +66,7 @@ BEGIN_MESSAGE_MAP(CTmpDiskMarkDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON1, &CTmpDiskMarkDlg::OnBnClickedButton1)
+	ON_BN_CLICKED(IDC_BUTTON2, &CTmpDiskMarkDlg::OnBnClickedButton2)
 END_MESSAGE_MAP()
 
 
@@ -160,10 +161,23 @@ void CTmpDiskMarkDlg::OnBnClickedButton1()
 {
 	// TODO: Add your control notification handler code here
 	UpdateData();
-	long long value = main_thr();
+	long long value = main_thr(1);
 
 	CString v1_sMessageToDisplay;
 	v1_sMessageToDisplay.Format(_T("time is %d "), value); 
+	MessageBox(v1_sMessageToDisplay, 0, MB_ICONINFORMATION);
+
+}
+
+
+void CTmpDiskMarkDlg::OnBnClickedButton2()
+{
+	// TODO: Add your control notification handler code here
+	UpdateData();
+
+	long long value = main_thr(2);
+	CString v1_sMessageToDisplay;
+	v1_sMessageToDisplay.Format(_T("time is %d "), value);
 	MessageBox(v1_sMessageToDisplay, 0, MB_ICONINFORMATION);
 
 }
