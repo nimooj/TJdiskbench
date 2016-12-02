@@ -170,8 +170,9 @@ long long Random_write(BenchMarkData* data) {
 	DWORD writePtr;
 	LARGE_INTEGER StartTime, EndTime, ElapsedSeconds;
 	LARGE_INTEGER Freq;
+	double bufferSize = data->pageSize * 1024;
 	int blockNum = (int)data->trials / data->pageSize;
-	static char* bufferPtr = (char*)VirtualAlloc(NULL, data->pageSize, MEM_COMMIT, PAGE_READWRITE);
+	static char* bufferPtr = (char*)VirtualAlloc(NULL, bufferSize, MEM_COMMIT, PAGE_READWRITE);
 
 	static HANDLE hFile = CreateFile(testFilePath, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_NO_BUFFERING | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
 	if (hFile == INVALID_HANDLE_VALUE) {
@@ -212,34 +213,51 @@ long long Random_write(BenchMarkData* data) {
 // ================================  CONTROLLER  ===========================================
 
 void init(BenchMarkData* data) {
-	//data = (BenchMarkData*) VirtualAlloc(NULL, sizeof(BenchMarkData*), MEM_COMMIT, PAGE_READWRITE);
 	SYSTEM_INFO sysinfo;
-
 	GetSystemInfo(&sysinfo);
 	data->pageSize = sysinfo.dwPageSize;
 	testFileDir.Format(_T("C:\\BenchMark_testDir"));
 	CreateDirectory(testFileDir, NULL);
 	// testFilePath.Format(_T("%s\\SBenchMark%08X.tmp"), testFileDir, timeGetTime());
 	testFilePath.Format(_T("%s\\BenchMark_testFile.tmp"), testFileDir);
+
+  data->bandwidth = 0;
 }
 
 long long callSequentialRead(BenchMarkData* data) {
-	int i;
+	int b, i;
 	long long sr = 0;
-	for (i = 0; i < data->trials; i++) {
-		sr += Sequential_read(data);
-	}
+
+  // generate tests for 4K(4,096B) ... 4M(4,194,304B)
+  for (b = 0; b < 6; b++) {
+    // generate tests {trials} times
+    for (i = 0; i < data->trials; i++) {
+      sr += Sequential_read(data);
+    }
+
+    data->bandwidth += sr;
+    seqRead[b] = sr/data->trials;
+    j++;
+    sr = 0;
+  }
+
 	return sr/data->trials;
 }
 
 long long callSequentialWrite(BenchMarkData* data) {
-	int i, b;
+	int b, i;
 	long long sr = 0;
 
-  for (b = 4; b < 4096; b *= 4) {
+  // generate tests for 4K(4,096B) ... 4M(4,194,304B)
+  for (b = 0; b < 6; b++) {
+    // generate tests {trials} times
     for (i = 0; i < data->trials; i++) {
       sr += Sequential_write(data);
     }
+
+    seqWrite[b] = sr/data->trials;
+    j++;
+    sr = 0;
   }
 	return sr/data->trials;
 }
