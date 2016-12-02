@@ -4,6 +4,7 @@
 
 #include "stdafx.h"
 #include "BenchmMarkData.h"
+#include "BenchMark_read.h"
 #include <stdio.h>
 #include <windows.h>
 #pragma comment(lib, "user32.lib")

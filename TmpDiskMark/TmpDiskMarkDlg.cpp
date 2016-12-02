@@ -6,7 +6,7 @@
 #include "TmpDiskMark.h"
 #include "afxdialogex.h"
 #include "TmpDiskMarkDlg.h"
-#include "BenchMark_read.h" 
+#include "BenchMark.h" 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -67,6 +67,9 @@ BEGIN_MESSAGE_MAP(CTmpDiskMarkDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON1, &CTmpDiskMarkDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CTmpDiskMarkDlg::OnBnClickedButton2)
+	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB1, &CTmpDiskMarkDlg::OnTcnSelchangeTab1)
+	ON_BN_CLICKED(IDC_BUTTON4, &CTmpDiskMarkDlg::OnBnClickedButton4)
+	ON_BN_CLICKED(IDC_BUTTON3, &CTmpDiskMarkDlg::OnBnClickedButton3)
 END_MESSAGE_MAP()
 
 
@@ -180,4 +183,29 @@ void CTmpDiskMarkDlg::OnBnClickedButton2()
 	v1_sMessageToDisplay.Format(_T("time is %d "), value);
 	MessageBox(v1_sMessageToDisplay, 0, MB_ICONINFORMATION);
 
+}
+
+
+void CTmpDiskMarkDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	// TODO: Add your control notification handler code here
+	*pResult = 0;
+}
+
+
+void CTmpDiskMarkDlg::OnBnClickedButton4()
+{
+	// TODO: Add your control notification handler code here
+}
+
+
+void CTmpDiskMarkDlg::OnBnClickedButton3()
+{
+	// TODO: Add your control notification handler code here
+	UpdateData();
+	long long value = main_thr(1);
+
+	CString v1_sMessageToDisplay;
+	v1_sMessageToDisplay.Format(_T("time is %d "), value);
+	MessageBox(v1_sMessageToDisplay, 0, MB_ICONINFORMATION);
 }
