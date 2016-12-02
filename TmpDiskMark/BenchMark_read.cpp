@@ -18,9 +18,6 @@ static CString testFilePath;
 
 long long Sequential_read(BenchMarkData* data)
 {
-	//data = (BenchMarkData*)VirtualAlloc(NULL, sizeof(BenchMarkData*), MEM_COMMIT);
-
-	//SYSTEM_INFO dl; 
 	int i, j;
 	BOOL result, wait = TRUE;
 	DWORD readSize;
@@ -79,7 +76,6 @@ long long Sequential_write(BenchMarkData* data) {
 	LARGE_INTEGER Freq;
 	double bufferSize = data->pageSize * 1024;
 	int loop = (int)bufferSize / data->pageSize;
-	//int loop = (int)data->trials / data->pageSize;
 	static char* p_buffer = (char*)VirtualAlloc(NULL, data->pageSize, MEM_COMMIT, PAGE_READWRITE);
 
 	// create Test File
