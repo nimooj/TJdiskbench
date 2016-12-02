@@ -3,10 +3,17 @@
 */
 
 #include "stdafx.h"
+<<<<<<< HEAD
 #include "BenchmMarkData.h"
 #include "BenchMark_read.h" //problem
 #include <stdio.h>   
+=======
+#include "BenchMarkData.h"
+#include "BenchMark.h"
+#include <stdio.h>
+>>>>>>> e958e56b2b249ee70598ad23db9789e2a3844a54
 #include <windows.h>
+#include <math.h>
 #pragma comment(lib, "user32.lib")
 #include <atlstr.h>
 #include <iostream>
@@ -25,7 +32,7 @@ long long Sequential_read(BenchMarkData* data)
 	BOOL result;
 	DWORD readPtr;
 	LARGE_INTEGER StartTime, EndTime, ElapsedSeconds, Freq;
-	double bufferSize = data->pageSize * 1024;
+	double bufferSize = data->testSize; //data->pageSize * 1024;
 	int blockNum = (int)bufferSize / data->pageSize;
 	static char* bufferPtr = (char*)VirtualAlloc(NULL, bufferSize, MEM_COMMIT, PAGE_READWRITE);
 	int t = 4;
@@ -60,7 +67,7 @@ long long Sequential_read(BenchMarkData* data)
 	str.Format(_T("starttime: %d ms, endtime: %d ms"), StartTime.QuadPart, EndTime.QuadPart); // float??À» CString??À¸?? ?Ù²??Ö±? À§?? ????. 
 	AfxMessageBox(str);
 	ElapsedSeconds.QuadPart = EndTime.QuadPart - StartTime.QuadPart;
-	ElapsedSeconds.QuadPart *= 1000000;
+	ElapsedSeconds.QuadPart *= 1000;
 	str.Format(_T("%d ms"), ElapsedSeconds.QuadPart); // float??À» CString??À¸?? ?Ù²??Ö±? À§?? ????. 
 	AfxMessageBox(str);
 	ElapsedSeconds.QuadPart /= Freq.QuadPart;
@@ -77,12 +84,12 @@ long long Random_read(BenchMarkData* data) {
   DWORD readPtr;
 	LARGE_INTEGER StartTime, EndTime, ElapsedSeconds, Freq;
   LARGE_INTEGER randBlockPtr;
-	double bufferSize = data->pageSize * 1024;
+	double bufferSize = data->testSize;//data->pageSize * 1024;
 	int blockNum = (int)bufferSize / data->pageSize;
 	static char* bufferPtr = (char*)VirtualAlloc(NULL, bufferSize, MEM_COMMIT, PAGE_READWRITE);
 
 	// create Test File
-	static HANDLE hFile = CreateFile(testFilePath, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_NO_BUFFERING | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+	static HANDLE hFile = CreateFile(testFilePath, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_NO_BUFFERING | FILE_FLAG_RANDOM_ACCESS, NULL);
 	
 	if (hFile == INVALID_HANDLE_VALUE) {
     // handle erro
@@ -95,7 +102,7 @@ long long Random_read(BenchMarkData* data) {
 	QueryPerformanceCounter(&StartTime);
 
   for (j = 0; j < blockNum; j++) {
-    randBlockPtr = rand() % ((int)(bufferSize / data->pageSize) + 1)
+	randBlockPtr.QuadPart = (long long) rand() % ((int)(bufferSize / data->pageSize) + 1);
     setPtr_result = SetFilePointerEx(hFile, randBlockPtr, NULL, FILE_BEGIN);
     result = ReadFile(hFile, bufferPtr, data->pageSize, &readPtr, NULL);
 
@@ -113,7 +120,7 @@ long long Random_read(BenchMarkData* data) {
   VirtualFree(bufferPtr, bufferSize, MEM_DECOMMIT);
 
 	ElapsedSeconds.QuadPart = EndTime.QuadPart - StartTime.QuadPart;
-	ElapsedSeconds.QuadPart *= 1000000;
+	ElapsedSeconds.QuadPart *= 1000;
 	ElapsedSeconds.QuadPart /= Freq.QuadPart;
 
 	return ElapsedSeconds.QuadPart;
@@ -127,7 +134,8 @@ long long Sequential_write(BenchMarkData* data) {
 	DWORD writePtr;
 	LARGE_INTEGER StartTime, EndTime, ElapsedSeconds;
 	LARGE_INTEGER Freq;
-	int blockNum = (int)data->trials / data->pageSize;
+	double bufferSize = data->testSize; //data->pageSize * 1024;
+	int blockNum = (int)bufferSize / data->pageSize; //(int)data->trials / data->pageSize;
 	static char* bufferPtr = (char*)VirtualAlloc(NULL, data->pageSize, MEM_COMMIT, PAGE_READWRITE);
 
 	// create Test File
@@ -158,7 +166,7 @@ long long Sequential_write(BenchMarkData* data) {
 
 	// Format Performance Counter unit to second ( ns to s )
 	ElapsedSeconds.QuadPart = EndTime.QuadPart - StartTime.QuadPart;
-	ElapsedSeconds.QuadPart *= 1000000;
+	ElapsedSeconds.QuadPart *= 1000;
 	ElapsedSeconds.QuadPart /= Freq.QuadPart;
 
 	return ElapsedSeconds.QuadPart;
@@ -169,12 +177,12 @@ long long Random_write(BenchMarkData* data) {
 	BOOL setPtr_result, result;
 	DWORD writePtr;
 	LARGE_INTEGER StartTime, EndTime, ElapsedSeconds;
-	LARGE_INTEGER Freq;
+	LARGE_INTEGER Freq, randBlockPtr;
 	double bufferSize = data->pageSize * 1024;
-	int blockNum = (int)data->trials / data->pageSize;
+	int blockNum = (int) bufferSize / data->pageSize;
 	static char* bufferPtr = (char*)VirtualAlloc(NULL, bufferSize, MEM_COMMIT, PAGE_READWRITE);
 
-	static HANDLE hFile = CreateFile(testFilePath, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_NO_BUFFERING | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+	static HANDLE hFile = CreateFile(testFilePath, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_NO_BUFFERING | FILE_FLAG_RANDOM_ACCESS, NULL);
 	if (hFile == INVALID_HANDLE_VALUE) {
 		// handle error
 	}
@@ -187,7 +195,7 @@ long long Random_write(BenchMarkData* data) {
 
   for (j = 0; j < blockNum; j++)
   {
-    randBlockPtr = rand() % ((int)(bufferSize / data->pageSize) + 1)
+	randBlockPtr.QuadPart = (long long) rand() % ((int)(bufferSize / data->pageSize) + 1);
     setPtr_result = SetFilePointerEx(hFile, randBlockPtr, NULL, FILE_BEGIN);
 
     result = WriteFile(hFile, bufferPtr, data->pageSize, &writePtr, NULL);
@@ -204,7 +212,7 @@ long long Random_write(BenchMarkData* data) {
 
 	// Format Performance Counter unit to second ( ns to s )
 	ElapsedSeconds.QuadPart = EndTime.QuadPart - StartTime.QuadPart;
-	ElapsedSeconds.QuadPart *= 1000000;
+	ElapsedSeconds.QuadPart *= 1000;
 	ElapsedSeconds.QuadPart /= Freq.QuadPart;
 
 	return ElapsedSeconds.QuadPart;
@@ -212,21 +220,34 @@ long long Random_write(BenchMarkData* data) {
 
 // ================================  CONTROLLER  ===========================================
 
-void init(BenchMarkData* data) {
+void init_data(BenchMarkData* data) {
 	SYSTEM_INFO sysinfo;
+
 	GetSystemInfo(&sysinfo);
 	data->pageSize = sysinfo.dwPageSize;
-	testFileDir.Format(_T("C:\\BenchMark_testDir"));
-	CreateDirectory(testFileDir, NULL);
-	// testFilePath.Format(_T("%s\\SBenchMark%08X.tmp"), testFileDir, timeGetTime());
-	testFilePath.Format(_T("%s\\BenchMark_testFile.tmp"), testFileDir);
-
-  data->bandwidth = 0;
+  data->testSize = 4096;
+  data->bandwidth = 0.0;
 }
 
-long long callSequentialRead(BenchMarkData* data) {
+void setTestEnv() {
+	testFileDir.Format(_T("C:\\BenchMark_testDir"));
+	CreateDirectory(testFileDir, NULL);
+	testFilePath.Format(_T("%s\\BenchMark_testFile.tmp"), testFileDir);
+	// testFilePath.Format(_T("%s\\SBenchMark%08X.tmp"), testFileDir, timeGetTime());
+}
+
+void checkDiskFreeSpace() {
+ //GetDiskFreeSpaceEx()
+}
+
+long long callSequentialRead() {
 	int b, i;
 	long long sr = 0;
+
+	BenchMarkData* data = (BenchMarkData*)VirtualAlloc(NULL, sizeof(BenchMarkData*), MEM_COMMIT, PAGE_READWRITE);
+  init_data(data);
+
+	data->trials = 5;
 
   // generate tests for 4K(4,096B) ... 4M(4,194,304B)
   for (b = 0; b < 6; b++) {
@@ -235,18 +256,25 @@ long long callSequentialRead(BenchMarkData* data) {
       sr += Sequential_read(data);
     }
 
-    data->bandwidth += sr;
-    seqRead[b] = sr/data->trials;
-    j++;
+    data->bandwidth += (4096 * pow(4, b)) / sr; // unit: B/ms == MB/s
+    data->seqRead[b] = sr/data->trials;
     sr = 0;
   }
+
+  // Get average bandwidth
+  data->bandwidth /= 6;
 
 	return sr/data->trials;
 }
 
-long long callSequentialWrite(BenchMarkData* data) {
+long long callSequentialWrite() {
 	int b, i;
 	long long sr = 0;
+
+	BenchMarkData* data = (BenchMarkData*)VirtualAlloc(NULL, sizeof(BenchMarkData*), MEM_COMMIT, PAGE_READWRITE);
+  init_data(data);
+
+	data->trials = 5;
 
   // generate tests for 4K(4,096B) ... 4M(4,194,304B)
   for (b = 0; b < 6; b++) {
@@ -255,25 +283,28 @@ long long callSequentialWrite(BenchMarkData* data) {
       sr += Sequential_write(data);
     }
 
-    seqWrite[b] = sr/data->trials;
-    j++;
+    data->bandwidth += (4096 * pow(4, b)) / sr;
+    data->seqWrite[b] = sr/data->trials;
     sr = 0;
   }
+
+  // Get average bandwidth
+  data->bandwidth /= 6;
 	return sr/data->trials;
 }
 
 long long main_thr(int d) {
 	DWORD thread_id;
-	BenchMarkData* data = (BenchMarkData*)VirtualAlloc(NULL, sizeof(BenchMarkData*), MEM_COMMIT, PAGE_READWRITE);
-	data->trials = 5;
-	init(data);
+
+  setTestEnv();
+
 	long long ans;
 	if (d == 1) {
-		ans = callSequentialRead(data);
+		ans = callSequentialRead();
 	}
 	else if (d == 2)
 	{
-		ans = callSequentialWrite(data);
+		ans = callSequentialWrite();
 	}
 	return ans;
 }
