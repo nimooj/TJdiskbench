@@ -219,8 +219,12 @@ void init(BenchMarkData* data) {
 	data->pageSize = sysinfo.dwPageSize;
 	testFileDir.Format(_T("C:\\BenchMark_testDir"));
 	CreateDirectory(testFileDir, NULL);
-	//testFilePath.Format(_T("%s\\SBenchMark%08X.tmp"), testFileDir, timeGetTime());
+	// testFilePath.Format(_T("%s\\SBenchMark%08X.tmp"), testFileDir, timeGetTime());
 	testFilePath.Format(_T("%s\\BenchMark_testFile.tmp"), testFileDir);
+
+
+  // check c drive free space
+
 }
 
 long long seq_read(BenchMarkData* data) {
