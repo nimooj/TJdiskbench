@@ -3,10 +3,11 @@
 */
 
 #include "stdafx.h"
-#include "BenchmMarkData.h"
-#include "BenchMark_read.h"
+#include "BenchMarkData.h"
+#include "BenchMark.h"
 #include <stdio.h>
 #include <windows.h>
+#include <math.h>
 #pragma comment(lib, "user32.lib")
 #include <atlstr.h>
 #include <iostream>
@@ -59,7 +60,7 @@ long long Sequential_read(BenchMarkData* data)
 	str.Format(_T("starttime: %d ms, endtime: %d ms"), StartTime.QuadPart, EndTime.QuadPart); // float??À» CString??À¸?? ?Ù²??Ö±? À§?? ????. 
 	AfxMessageBox(str);
 	ElapsedSeconds.QuadPart = EndTime.QuadPart - StartTime.QuadPart;
-	ElapsedSeconds.QuadPart *= 1000000;
+	ElapsedSeconds.QuadPart *= 1000;
 	str.Format(_T("%d ms"), ElapsedSeconds.QuadPart); // float??À» CString??À¸?? ?Ù²??Ö±? À§?? ????. 
 	AfxMessageBox(str);
 	ElapsedSeconds.QuadPart /= Freq.QuadPart;
@@ -112,7 +113,7 @@ long long Random_read(BenchMarkData* data) {
   VirtualFree(bufferPtr, bufferSize, MEM_DECOMMIT);
 
 	ElapsedSeconds.QuadPart = EndTime.QuadPart - StartTime.QuadPart;
-	ElapsedSeconds.QuadPart *= 1000000;
+	ElapsedSeconds.QuadPart *= 1000;
 	ElapsedSeconds.QuadPart /= Freq.QuadPart;
 
 	return ElapsedSeconds.QuadPart;
@@ -157,7 +158,7 @@ long long Sequential_write(BenchMarkData* data) {
 
 	// Format Performance Counter unit to second ( ns to s )
 	ElapsedSeconds.QuadPart = EndTime.QuadPart - StartTime.QuadPart;
-	ElapsedSeconds.QuadPart *= 1000000;
+	ElapsedSeconds.QuadPart *= 1000;
 	ElapsedSeconds.QuadPart /= Freq.QuadPart;
 
 	return ElapsedSeconds.QuadPart;
@@ -203,7 +204,7 @@ long long Random_write(BenchMarkData* data) {
 
 	// Format Performance Counter unit to second ( ns to s )
 	ElapsedSeconds.QuadPart = EndTime.QuadPart - StartTime.QuadPart;
-	ElapsedSeconds.QuadPart *= 1000000;
+	ElapsedSeconds.QuadPart *= 1000;
 	ElapsedSeconds.QuadPart /= Freq.QuadPart;
 
 	return ElapsedSeconds.QuadPart;
@@ -213,19 +214,25 @@ long long Random_write(BenchMarkData* data) {
 
 void init(BenchMarkData* data) {
 	SYSTEM_INFO sysinfo;
+
 	GetSystemInfo(&sysinfo);
-	data->pageSize = sysinfo.dwPageSize;
 	testFileDir.Format(_T("C:\\BenchMark_testDir"));
 	CreateDirectory(testFileDir, NULL);
-	// testFilePath.Format(_T("%s\\SBenchMark%08X.tmp"), testFileDir, timeGetTime());
 	testFilePath.Format(_T("%s\\BenchMark_testFile.tmp"), testFileDir);
+	// testFilePath.Format(_T("%s\\SBenchMark%08X.tmp"), testFileDir, timeGetTime());
 
-  data->bandwidth = 0;
+	data->pageSize = sysinfo.dwPageSize;
+  data->bandwidth = 0.0;
 }
 
-long long callSequentialRead(BenchMarkData* data) {
+long long callSequentialRead() {
 	int b, i;
 	long long sr = 0;
+
+	BenchMarkData* data = (BenchMarkData*)VirtualAlloc(NULL, sizeof(BenchMarkData*), MEM_COMMIT, PAGE_READWRITE);
+  init(data);
+
+	data->trials = 5;
 
   // generate tests for 4K(4,096B) ... 4M(4,194,304B)
   for (b = 0; b < 6; b++) {
@@ -234,18 +241,26 @@ long long callSequentialRead(BenchMarkData* data) {
       sr += Sequential_read(data);
     }
 
-    data->bandwidth += sr;
+    data->bandwidth += (4096 * pow(4, b)) / sr; // unit: B/ms == MB/s
     seqRead[b] = sr/data->trials;
     j++;
     sr = 0;
   }
 
+  // Get average bandwidth
+  data->bandwidth /= 6;
+
 	return sr/data->trials;
 }
 
-long long callSequentialWrite(BenchMarkData* data) {
+long long callSequentialWrite() {
 	int b, i;
 	long long sr = 0;
+
+	BenchMarkData* data = (BenchMarkData*)VirtualAlloc(NULL, sizeof(BenchMarkData*), MEM_COMMIT, PAGE_READWRITE);
+  init(data);
+
+	data->trials = 5;
 
   // generate tests for 4K(4,096B) ... 4M(4,194,304B)
   for (b = 0; b < 6; b++) {
@@ -254,25 +269,27 @@ long long callSequentialWrite(BenchMarkData* data) {
       sr += Sequential_write(data);
     }
 
+    data->bandwidth += (4096 * pow(4, b)) / sr;
     seqWrite[b] = sr/data->trials;
     j++;
     sr = 0;
   }
+
+  // Get average bandwidth
+  data->bandwidth /= 6;
 	return sr/data->trials;
 }
 
 long long main_thr(int d) {
 	DWORD thread_id;
-	BenchMarkData* data = (BenchMarkData*)VirtualAlloc(NULL, sizeof(BenchMarkData*), MEM_COMMIT, PAGE_READWRITE);
-	data->trials = 5;
-	init(data);
+
 	long long ans;
 	if (d == 1) {
-		ans = callSequentialRead(data);
+		ans = callSequentialRead();
 	}
 	else if (d == 2)
 	{
-		ans = callSequentialWrite(data);
+		ans = callSequentialWrite();
 	}
 	return ans;
 }
