@@ -54,7 +54,7 @@ long long Sequential_read(BenchMarkData* data)
 
 	QueryPerformanceCounter(&EndTime);
 
-  VirtualFree(bufferPtr);
+  VirtualFree(bufferPtr, bufferSize, MEM_DECOMMIT);
 
 	str.Format(_T("starttime: %d ms, endtime: %d ms"), StartTime.QuadPart, EndTime.QuadPart); // float??À» CString??À¸?? ?Ù²??Ö±? À§?? ????. 
 	AfxMessageBox(str);
@@ -109,7 +109,7 @@ long long Random_read(BenchMarkData* data) {
 
 	QueryPerformanceCounter(&EndTime);
 
-  VirtualFree(bufferPtr);
+  VirtualFree(bufferPtr, bufferSize, MEM_DECOMMIT);
 
 	ElapsedSeconds.QuadPart = EndTime.QuadPart - StartTime.QuadPart;
 	ElapsedSeconds.QuadPart *= 1000000;
@@ -153,7 +153,7 @@ long long Sequential_write(BenchMarkData* data) {
 
 	// End Performance Counter
 	QueryPerformanceCounter(&EndTime);
-  VirtualFree(bufferPtr);
+  VirtualFree(bufferPtr, bufferSize, MEM_DECOMMIT);
 
 	// Format Performance Counter unit to second ( ns to s )
 	ElapsedSeconds.QuadPart = EndTime.QuadPart - StartTime.QuadPart;
@@ -198,7 +198,7 @@ long long Random_write(BenchMarkData* data) {
 
 	// End Performance Counter
 	QueryPerformanceCounter(&EndTime);
-  VirtualFree(bufferPtr);
+  VirtualFree(bufferPtr, bufferSize, MEM_DECOMMIT);
 
 	// Format Performance Counter unit to second ( ns to s )
 	ElapsedSeconds.QuadPart = EndTime.QuadPart - StartTime.QuadPart;
@@ -222,23 +222,24 @@ void init(BenchMarkData* data) {
 	testFilePath.Format(_T("%s\\BenchMark_testFile.tmp"), testFileDir);
 }
 
-long long seq_read(BenchMarkData* data) {
+long long callSequentialRead(BenchMarkData* data) {
 	int i;
 	long long sr = 0;
 	for (i = 0; i < data->trials; i++) {
 		sr += Sequential_read(data);
-		//SetFilePointer(hFile, 0, NULL, FILE_BEGIN);
 	}
 	return sr/data->trials;
 }
 
-long long seq_write(BenchMarkData* data) {
-	int i;
+long long callSequentialWrite(BenchMarkData* data) {
+	int i, b;
 	long long sr = 0;
-	for (i = 0; i < data->trials; i++) {
-		sr += Sequential_write(data);
-		//SetFilePointer(hFile, 0, NULL, FILE_BEGIN);
-	}
+
+  for (b = 4; b < 4096; b *= 4) {
+    for (i = 0; i < data->trials; i++) {
+      sr += Sequential_write(data);
+    }
+  }
 	return sr/data->trials;
 }
 
@@ -249,11 +250,11 @@ long long main_thr(int d) {
 	init(data);
 	long long ans;
 	if (d == 1) {
-		ans = seq_read(data);
+		ans = callSequentialRead(data);
 	}
 	else if (d == 2)
 	{
-		ans = seq_write(data);
+		ans = callSequentialWrite(data);
 	}
 	return ans;
 }
