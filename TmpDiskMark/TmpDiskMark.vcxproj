@@ -185,8 +185,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Benchmark.h" />
     <ClInclude Include="BenchMarkData.h" />
-    <ClInclude Include="BenchMark_read.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -195,7 +195,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BenchMark.cpp" />
-    <ClCompile Include="Controller.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

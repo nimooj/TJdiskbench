@@ -33,10 +33,10 @@
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BenchMark_read.h">
+    <ClInclude Include="BenchMarkData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BenchMarkData.h">
+    <ClInclude Include="Benchmark.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -45,9 +45,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Controller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TmpDiskMarkDlg.cpp">

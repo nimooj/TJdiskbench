@@ -3,15 +3,9 @@
 */
 
 #include "stdafx.h"
-<<<<<<< HEAD
-#include "BenchmMarkData.h"
-#include "BenchMark_read.h" //problem
-#include <stdio.h>   
-=======
 #include "BenchMarkData.h"
 #include "BenchMark.h"
 #include <stdio.h>
->>>>>>> e958e56b2b249ee70598ad23db9789e2a3844a54
 #include <windows.h>
 #include <math.h>
 #pragma comment(lib, "user32.lib")
@@ -63,7 +57,7 @@ long long Sequential_read(BenchMarkData* data)
 	QueryPerformanceCounter(&EndTime);
 
   VirtualFree(bufferPtr, bufferSize, MEM_DECOMMIT);
-
+  CString str;
 	str.Format(_T("starttime: %d ms, endtime: %d ms"), StartTime.QuadPart, EndTime.QuadPart); // float??À» CString??À¸?? ?Ù²??Ö±? À§?? ????. 
 	AfxMessageBox(str);
 	ElapsedSeconds.QuadPart = EndTime.QuadPart - StartTime.QuadPart;
@@ -295,7 +289,8 @@ long long callSequentialWrite() {
 
 long long main_thr(int d) {
 	DWORD thread_id;
-
+	BenchMarkData* data = new BenchMarkData;
+	data->trials = 5;
   setTestEnv();
 
 	long long ans;
@@ -305,6 +300,14 @@ long long main_thr(int d) {
 	else if (d == 2)
 	{
 		ans = callSequentialWrite();
+	}
+	else if (d == 3)
+	{
+		ans = Random_read(data);
+	}
+	else if (d == 4)
+	{
+		ans = Random_write(data);
 	}
 	return ans;
 }

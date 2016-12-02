@@ -196,6 +196,12 @@ void CTmpDiskMarkDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 void CTmpDiskMarkDlg::OnBnClickedButton4()
 {
 	// TODO: Add your control notification handler code here
+	UpdateData();
+	long long value = main_thr(4);
+
+	CString v1_sMessageToDisplay;
+	v1_sMessageToDisplay.Format(_T("time is %d "), value);
+	MessageBox(v1_sMessageToDisplay, 0, MB_ICONINFORMATION);
 }
 
 
@@ -203,7 +209,7 @@ void CTmpDiskMarkDlg::OnBnClickedButton3()
 {
 	// TODO: Add your control notification handler code here
 	UpdateData();
-	long long value = main_thr(1);
+	long long value = main_thr(3);
 
 	CString v1_sMessageToDisplay;
 	v1_sMessageToDisplay.Format(_T("time is %d "), value);
