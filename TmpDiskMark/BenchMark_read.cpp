@@ -77,11 +77,13 @@ long long Sequential_write(BenchMarkData* data) {
 	DWORD writeSize;
 	LARGE_INTEGER StartTime, EndTime, ElapsedSeconds;
 	LARGE_INTEGER Freq;
-	int loop = (int)data->trials / data->pageSize;
+	double bufferSize = data->pageSize * 1024;
+	int loop = (int)bufferSize / data->pageSize;
+	//int loop = (int)data->trials / data->pageSize;
 	static char* p_buffer = (char*)VirtualAlloc(NULL, data->pageSize, MEM_COMMIT, PAGE_READWRITE);
 
 	// create Test File
-	static HANDLE hFile = CreateFile(testFilePath, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_NO_BUFFERING | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+	static HANDLE hFile = CreateFile(testFilePath, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED | FILE_FLAG_NO_BUFFERING | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
 	if (hFile == INVALID_HANDLE_VALUE) {
 		// handle error
 		return -1000012;
