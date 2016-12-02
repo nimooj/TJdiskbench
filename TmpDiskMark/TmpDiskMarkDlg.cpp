@@ -6,7 +6,7 @@
 #include "TmpDiskMark.h"
 #include "afxdialogex.h"
 #include "TmpDiskMarkDlg.h"
-#include "BenchMark_read.h" 
+#include "BenchMark.h" 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
