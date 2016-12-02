@@ -4,8 +4,8 @@
 
 #include "stdafx.h"
 #include "BenchmMarkData.h"
-#include "BenchMark_read.h"
-#include <stdio.h>
+#include "BenchMark_read.h" //problem
+#include <stdio.h>   
 #include <windows.h>
 #pragma comment(lib, "user32.lib")
 #include <atlstr.h>
@@ -28,6 +28,7 @@ long long Sequential_read(BenchMarkData* data)
 	double bufferSize = data->pageSize * 1024;
 	int blockNum = (int)bufferSize / data->pageSize;
 	static char* bufferPtr = (char*)VirtualAlloc(NULL, bufferSize, MEM_COMMIT, PAGE_READWRITE);
+	int t = 4;
 
 	// create Test File
 	static HANDLE hFile = CreateFile(testFilePath, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_NO_BUFFERING | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
