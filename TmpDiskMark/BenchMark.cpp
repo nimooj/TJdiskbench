@@ -95,7 +95,7 @@ long long Random_read(BenchMarkData* data) {
 	QueryPerformanceCounter(&StartTime);
 
   for (j = 0; j < blockNum; j++) {
-    randBlockPtr = rand() % ((int)(bufferSize / data->pageSize) + 1)
+	randBlockPtr.QuadPart = (long long) rand() % ((int)(bufferSize / data->pageSize) + 1);
     setPtr_result = SetFilePointerEx(hFile, randBlockPtr, NULL, FILE_BEGIN);
     result = ReadFile(hFile, bufferPtr, data->pageSize, &readPtr, NULL);
 
@@ -127,6 +127,7 @@ long long Sequential_write(BenchMarkData* data) {
 	DWORD writePtr;
 	LARGE_INTEGER StartTime, EndTime, ElapsedSeconds;
 	LARGE_INTEGER Freq;
+	double bufferSize = data->pageSize * 1024;
 	int blockNum = (int)data->trials / data->pageSize;
 	static char* bufferPtr = (char*)VirtualAlloc(NULL, data->pageSize, MEM_COMMIT, PAGE_READWRITE);
 
@@ -169,7 +170,7 @@ long long Random_write(BenchMarkData* data) {
 	BOOL setPtr_result, result;
 	DWORD writePtr;
 	LARGE_INTEGER StartTime, EndTime, ElapsedSeconds;
-	LARGE_INTEGER Freq;
+	LARGE_INTEGER Freq, randBlockPtr;
 	double bufferSize = data->pageSize * 1024;
 	int blockNum = (int)data->trials / data->pageSize;
 	static char* bufferPtr = (char*)VirtualAlloc(NULL, bufferSize, MEM_COMMIT, PAGE_READWRITE);
@@ -187,7 +188,7 @@ long long Random_write(BenchMarkData* data) {
 
   for (j = 0; j < blockNum; j++)
   {
-    randBlockPtr = rand() % ((int)(bufferSize / data->pageSize) + 1)
+	randBlockPtr.QuadPart = (long long) rand() % ((int)(bufferSize / data->pageSize) + 1);
     setPtr_result = SetFilePointerEx(hFile, randBlockPtr, NULL, FILE_BEGIN);
 
     result = WriteFile(hFile, bufferPtr, data->pageSize, &writePtr, NULL);
@@ -242,7 +243,7 @@ long long callSequentialRead() {
     }
 
     data->bandwidth += (4096 * pow(4, b)) / sr; // unit: B/ms == MB/s
-    seqRead[b] = sr/data->trials;
+    data->seqRead[b] = sr/data->trials;
     j++;
     sr = 0;
   }
@@ -270,7 +271,7 @@ long long callSequentialWrite() {
     }
 
     data->bandwidth += (4096 * pow(4, b)) / sr;
-    seqWrite[b] = sr/data->trials;
+    data->seqWrite[b] = sr/data->trials;
     j++;
     sr = 0;
   }
