@@ -220,10 +220,6 @@ void init(BenchMarkData* data) {
 	CreateDirectory(testFileDir, NULL);
 	// testFilePath.Format(_T("%s\\SBenchMark%08X.tmp"), testFileDir, timeGetTime());
 	testFilePath.Format(_T("%s\\BenchMark_testFile.tmp"), testFileDir);
-
-
-  // check c drive free space
-
 }
 
 long long seq_read(BenchMarkData* data) {
