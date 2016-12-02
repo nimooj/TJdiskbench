@@ -287,10 +287,60 @@ long long callSequentialWrite() {
 	return sr/data->trials;
 }
 
+long long callRandomRead() {
+	int b, i;
+	long long sr = 0;
+
+	BenchMarkData* data = (BenchMarkData*)VirtualAlloc(NULL, sizeof(BenchMarkData*), MEM_COMMIT, PAGE_READWRITE);
+  init_data(data);
+
+	data->trials = 5;
+
+  // generate tests for 4K(4,096B) ... 4M(4,194,304B)
+  for (b = 0; b < 6; b++) {
+    // generate tests {trials} times
+    for (i = 0; i < data->trials; i++) {
+      sr += Random_read(data);
+    }
+
+    data->bandwidth += (4096 * pow(4, b)) / sr;
+    data->seqWrite[b] = sr/data->trials;
+    sr = 0;
+  }
+
+  // Get average bandwidth
+  data->bandwidth /= 6;
+	return sr/data->trials;
+}
+
+long long callRadomWrite() {
+	int b, i;
+	long long sr = 0;
+
+	BenchMarkData* data = (BenchMarkData*)VirtualAlloc(NULL, sizeof(BenchMarkData*), MEM_COMMIT, PAGE_READWRITE);
+  init_data(data);
+
+	data->trials = 5;
+
+  // generate tests for 4K(4,096B) ... 4M(4,194,304B)
+  for (b = 0; b < 6; b++) {
+    // generate tests {trials} times
+    for (i = 0; i < data->trials; i++) {
+      sr += Random_write(data);
+    }
+
+    data->bandwidth += (4096 * pow(4, b)) / sr;
+    data->seqWrite[b] = sr/data->trials;
+    sr = 0;
+  }
+
+  // Get average bandwidth
+  data->bandwidth /= 6;
+	return sr/data->trials;
+}
+
 long long main_thr(int d) {
 	DWORD thread_id;
-	BenchMarkData* data = new BenchMarkData;
-	data->trials = 5;
   setTestEnv();
 
 	long long ans;
@@ -303,11 +353,11 @@ long long main_thr(int d) {
 	}
 	else if (d == 3)
 	{
-		ans = Random_read(data);
+    ans = callRandomRead();
 	}
 	else if (d == 4)
 	{
-		ans = Random_write(data);
+    ans = callRandomWrite();
 	}
 	return ans;
 }
