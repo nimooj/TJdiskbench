@@ -244,7 +244,6 @@ long long callSequentialRead() {
 
     data->bandwidth += (4096 * pow(4, b)) / sr; // unit: B/ms == MB/s
     data->seqRead[b] = sr/data->trials;
-    j++;
     sr = 0;
   }
 
@@ -272,7 +271,6 @@ long long callSequentialWrite() {
 
     data->bandwidth += (4096 * pow(4, b)) / sr;
     data->seqWrite[b] = sr/data->trials;
-    j++;
     sr = 0;
   }
 
