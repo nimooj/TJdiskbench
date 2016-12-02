@@ -26,7 +26,7 @@ long long Sequential_read(BenchMarkData* data)
 	BOOL result;
 	DWORD readPtr;
 	LARGE_INTEGER StartTime, EndTime, ElapsedSeconds, Freq;
-	double bufferSize = data->pageSize * 1024;
+	double bufferSize = data->testSize; //data->pageSize * 1024;
 	int blockNum = (int)bufferSize / data->pageSize;
 	static char* bufferPtr = (char*)VirtualAlloc(NULL, bufferSize, MEM_COMMIT, PAGE_READWRITE);
 
@@ -77,12 +77,12 @@ long long Random_read(BenchMarkData* data) {
   DWORD readPtr;
 	LARGE_INTEGER StartTime, EndTime, ElapsedSeconds, Freq;
   LARGE_INTEGER randBlockPtr;
-	double bufferSize = data->pageSize * 1024;
+	double bufferSize = data->testSize;//data->pageSize * 1024;
 	int blockNum = (int)bufferSize / data->pageSize;
 	static char* bufferPtr = (char*)VirtualAlloc(NULL, bufferSize, MEM_COMMIT, PAGE_READWRITE);
 
 	// create Test File
-	static HANDLE hFile = CreateFile(testFilePath, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_NO_BUFFERING | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+	static HANDLE hFile = CreateFile(testFilePath, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_NO_BUFFERING | FILE_FLAG_RANDOM_ACCESS, NULL);
 	
 	if (hFile == INVALID_HANDLE_VALUE) {
     // handle erro
@@ -127,8 +127,8 @@ long long Sequential_write(BenchMarkData* data) {
 	DWORD writePtr;
 	LARGE_INTEGER StartTime, EndTime, ElapsedSeconds;
 	LARGE_INTEGER Freq;
-	double bufferSize = data->pageSize * 1024;
-	int blockNum = (int)data->trials / data->pageSize;
+	double bufferSize = data->testSize; //data->pageSize * 1024;
+	int blockNum = (int)bufferSize / data->pageSize; //(int)data->trials / data->pageSize;
 	static char* bufferPtr = (char*)VirtualAlloc(NULL, data->pageSize, MEM_COMMIT, PAGE_READWRITE);
 
 	// create Test File
@@ -172,10 +172,10 @@ long long Random_write(BenchMarkData* data) {
 	LARGE_INTEGER StartTime, EndTime, ElapsedSeconds;
 	LARGE_INTEGER Freq, randBlockPtr;
 	double bufferSize = data->pageSize * 1024;
-	int blockNum = (int)data->trials / data->pageSize;
+	int blockNum = (int) bufferSize / data->pageSize;
 	static char* bufferPtr = (char*)VirtualAlloc(NULL, bufferSize, MEM_COMMIT, PAGE_READWRITE);
 
-	static HANDLE hFile = CreateFile(testFilePath, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_NO_BUFFERING | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+	static HANDLE hFile = CreateFile(testFilePath, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_NO_BUFFERING | FILE_FLAG_RANDOM_ACCESS, NULL);
 	if (hFile == INVALID_HANDLE_VALUE) {
 		// handle error
 	}
@@ -213,17 +213,24 @@ long long Random_write(BenchMarkData* data) {
 
 // ================================  CONTROLLER  ===========================================
 
-void init(BenchMarkData* data) {
+void init_data(BenchMarkData* data) {
 	SYSTEM_INFO sysinfo;
 
 	GetSystemInfo(&sysinfo);
+	data->pageSize = sysinfo.dwPageSize;
+  data->testSize = 4096;
+  data->bandwidth = 0.0;
+}
+
+void setTestEnv() {
 	testFileDir.Format(_T("C:\\BenchMark_testDir"));
 	CreateDirectory(testFileDir, NULL);
 	testFilePath.Format(_T("%s\\BenchMark_testFile.tmp"), testFileDir);
 	// testFilePath.Format(_T("%s\\SBenchMark%08X.tmp"), testFileDir, timeGetTime());
+}
 
-	data->pageSize = sysinfo.dwPageSize;
-  data->bandwidth = 0.0;
+void checkDiskFreeSpace() {
+ //GetDiskFreeSpaceEx()
 }
 
 long long callSequentialRead() {
@@ -231,7 +238,7 @@ long long callSequentialRead() {
 	long long sr = 0;
 
 	BenchMarkData* data = (BenchMarkData*)VirtualAlloc(NULL, sizeof(BenchMarkData*), MEM_COMMIT, PAGE_READWRITE);
-  init(data);
+  init_data(data);
 
 	data->trials = 5;
 
@@ -258,7 +265,7 @@ long long callSequentialWrite() {
 	long long sr = 0;
 
 	BenchMarkData* data = (BenchMarkData*)VirtualAlloc(NULL, sizeof(BenchMarkData*), MEM_COMMIT, PAGE_READWRITE);
-  init(data);
+  init_data(data);
 
 	data->trials = 5;
 
@@ -281,6 +288,8 @@ long long callSequentialWrite() {
 
 long long main_thr(int d) {
 	DWORD thread_id;
+
+  setTestEnv();
 
 	long long ans;
 	if (d == 1) {

@@ -5,7 +5,8 @@ class BenchMarkData //: public CWnd
 public:
 	//BenchMarkData(CWnd* pParent = NULL);
 
-	int trials = 1;
+  int testSize;
+	int trials;
 	double pageSize;
 
   double bandwidth;
