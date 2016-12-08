@@ -56,18 +56,9 @@ long long Sequential_read(BenchMarkData* data)
 
 	QueryPerformanceCounter(&EndTime);
 
-	VirtualFree(bufferPtr, bufferSize, MEM_DECOMMIT);
-/*	CString str;
-	str.Format(_T("starttime: %d ms, endtime: %d ms"), StartTime.QuadPart, EndTime.QuadPart); // float??À» CString??À¸?? ?Ù²??Ö±? À§?? ????. 
-	AfxMessageBox(str);*/
+  VirtualFree(bufferPtr, bufferSize, MEM_DECOMMIT);
 	ElapsedSeconds.QuadPart = EndTime.QuadPart - StartTime.QuadPart;
 	ElapsedSeconds.QuadPart *= 1000;
-	/*str.Format(_T("%d ms"), ElapsedSeconds.QuadPart); // float??À» CString??À¸?? ?Ù²??Ö±? À§?? ????. 
-	AfxMessageBox(str);
-	ElapsedSeconds.QuadPart /= Freq.QuadPart;
-	//	CString str;
-	str.Format(_T("time spent is %d ms"), ElapsedSeconds.QuadPart); // float??À» CString??À¸?? ?Ù²??Ö±? À§?? ????. 
-	AfxMessageBox(str);*/
 
 	return ElapsedSeconds.QuadPart;
 }
@@ -221,6 +212,7 @@ void init_data(BenchMarkData* data) {
 	data->pageSize = sysinfo.dwPageSize;
 	data->testSize = 4096;
 	data->bandwidth = 0.0;
+  data->trials = ???;
 }
 
 void setTestEnv() {
@@ -241,8 +233,6 @@ BenchMarkData* callSequentialRead() {
 	BenchMarkData* data = (BenchMarkData*)VirtualAlloc(NULL, sizeof(BenchMarkData*), MEM_COMMIT, PAGE_READWRITE);
 	init_data(data);
 
-	data->trials = 5;
-
 	// generate tests for 4K(4,096B) ... 4M(4,194,304B)
 	for (b = 0; b < 6; b++) {
 		// generate tests {trials} times
@@ -258,18 +248,15 @@ BenchMarkData* callSequentialRead() {
 	// Get average bandwidth
 	data->bandwidth /= 6;
 
-	//return sr / data->trials;
 	return data;
 }
 
-long long callSequentialWrite() {
+BenchMarkData* callSequentialWrite() {
 	int b, i;
 	long long sr = 0;
 
 	BenchMarkData* data = (BenchMarkData*)VirtualAlloc(NULL, sizeof(BenchMarkData*), MEM_COMMIT, PAGE_READWRITE);
 	init_data(data);
-
-	data->trials = 5;
 
 	// generate tests for 4K(4,096B) ... 4M(4,194,304B)
 	for (b = 0; b < 6; b++) {
@@ -285,17 +272,15 @@ long long callSequentialWrite() {
 
 	// Get average bandwidth
 	data->bandwidth /= 6;
-	return sr / data->trials;
+  return data;
 }
 
-long long callRandomRead() {
+BenchMarkData* callRandomRead() {
 	int b, i;
 	long long sr = 0;
 
 	BenchMarkData* data = (BenchMarkData*)VirtualAlloc(NULL, sizeof(BenchMarkData*), MEM_COMMIT, PAGE_READWRITE);
 	init_data(data);
-
-	data->trials = 5;
 
 	// generate tests for 4K(4,096B) ... 4M(4,194,304B)
 	for (b = 0; b < 6; b++) {
@@ -311,17 +296,15 @@ long long callRandomRead() {
 
 	// Get average bandwidth
 	data->bandwidth /= 6;
-	return sr / data->trials;
+  return data;
 }
 
-long long callRadomWrite() {
+BenchMarkData* callRadomWrite() {
 	int b, i;
 	long long sr = 0;
 
 	BenchMarkData* data = (BenchMarkData*)VirtualAlloc(NULL, sizeof(BenchMarkData*), MEM_COMMIT, PAGE_READWRITE);
 	init_data(data);
-
-	data->trials = 5;
 
 	// generate tests for 4K(4,096B) ... 4M(4,194,304B)
 	for (b = 0; b < 6; b++) {
@@ -337,30 +320,29 @@ long long callRadomWrite() {
 
 	// Get average bandwidth
 	data->bandwidth /= 6;
-	return sr / data->trials;
+  return data;
 }
 
 BenchMarkData* main_thr(int d) {
 	DWORD thread_id;
 	setTestEnv();
-	BenchMarkData* tmp = callSequentialRead();
-	long long ans;
+	BenchMarkData* tmp;
 	
 	if (d == 1) {
 		tmp = callSequentialRead();
-		//ans = tmp->seqRead[5];
 	}
 	else if (d == 2)
 	{
-		ans = callSequentialWrite();
+		tmp = callSequentialWrite();
 	}
 	else if (d == 3)
 	{
-		ans = callRandomRead();
+		tmp = callRandomRead();
 	}
 	else if (d == 4)
 	{
-		ans = callRadomWrite();
+		tmp = callRadomWrite();
 	}
+
 	return tmp;
 }
