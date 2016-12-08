@@ -18,6 +18,8 @@ using namespace std;
 static CString testFileDir;
 static CString testFilePath;
 
+int trialNum = 34;
+
 // ================================  MODULE READ  ===========================================
 
 long long Sequential_read(BenchMarkData* data)
@@ -35,7 +37,9 @@ long long Sequential_read(BenchMarkData* data)
 	static HANDLE hFile = CreateFile(testFilePath, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_NO_BUFFERING | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
 
 	if (hFile == INVALID_HANDLE_VALUE) {
-
+		CString str;
+		str.Format(_T("error line 42 , and num of trial is %d"), data->trials); // 
+		AfxMessageBox(str);
 		return -10000;
 	}
 
@@ -43,20 +47,24 @@ long long Sequential_read(BenchMarkData* data)
 	// Start Performance Counter
 	QueryPerformanceFrequency(&Freq);
 	QueryPerformanceCounter(&StartTime);
-
+	
+	
 	for (j = 0; j < blockNum; j++)
 	{
 		result = ReadFile(hFile, bufferPtr, data->pageSize, &readPtr, NULL);
 
 		if (!result) {
 			// Handle error
+			CString str;
+			str.Format(_T("error line 58 , and num of trial is %d and block number is %d"), data->trials, blockNum); // 
+			AfxMessageBox(str);
 		}
 
 	}
 
 	QueryPerformanceCounter(&EndTime);
 
-  VirtualFree(bufferPtr, bufferSize, MEM_DECOMMIT);
+	VirtualFree(bufferPtr, bufferSize, MEM_DECOMMIT);
 	ElapsedSeconds.QuadPart = EndTime.QuadPart - StartTime.QuadPart;
 	ElapsedSeconds.QuadPart *= 1000;
 
@@ -78,6 +86,9 @@ long long Random_read(BenchMarkData* data) {
 
 	if (hFile == INVALID_HANDLE_VALUE) {
 		// handle erro
+		CString str;
+		str.Format(_T("error line 89, and num of trial is %d"), data->trials); // 
+		AfxMessageBox(str);
 	}
 
 	// Generate rand Num with os tick count to acquire high randomness
@@ -92,11 +103,17 @@ long long Random_read(BenchMarkData* data) {
 		result = ReadFile(hFile, bufferPtr, data->pageSize, &readPtr, NULL);
 
 		if (!setPtr_result) {
-			// handle error for settig rand file ptr
+			// handle error for settig rand file ptrCString str;
+			CString str;
+			str.Format(_T("error line 107, and num of trial is %d"), data->trials); // 
+			AfxMessageBox(str);
 		}
 
 		if (!result) {
 			// handle error for read file failure
+			CString str;
+			str.Format(_T("error line 114 , and num of trial is %d"), data->trials); // 
+			AfxMessageBox(str);
 		}
 	}
 
@@ -127,6 +144,9 @@ long long Sequential_write(BenchMarkData* data) {
 	static HANDLE hFile = CreateFile(testFilePath, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_NO_BUFFERING | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
 	if (hFile == INVALID_HANDLE_VALUE) {
 		// handle error
+		CString str;
+		str.Format(_T("error line 147, and num of trial is %d"), data->trials); // 
+		AfxMessageBox(str);
 		return -1000012;
 	}
 
@@ -141,7 +161,10 @@ long long Sequential_write(BenchMarkData* data) {
 		FlushFileBuffers(hFile);
 
 		if (!result) {
-			// Handle error
+			// Handle errorCString str;
+			CString str;
+			str.Format(_T("error line 165 , and num of trial is %d"), data->trials); // 
+			AfxMessageBox(str);
 		}
 	}
 
@@ -188,6 +211,9 @@ long long Random_write(BenchMarkData* data) {
 
 		if (!result) {
 			// Handle error
+			CString str;
+			str.Format(_T("error line 214 , and num of trial is %d"), data->trials); // 
+			AfxMessageBox(str);
 		}
 	}
 
@@ -212,7 +238,7 @@ void init_data(BenchMarkData* data) {
 	data->pageSize = sysinfo.dwPageSize;
 	data->testSize = 4096;
 	data->bandwidth = 0.0;
-  data->trials = ???;
+	data->trials = trialNum ;
 }
 
 void setTestEnv() {
@@ -272,7 +298,7 @@ BenchMarkData* callSequentialWrite() {
 
 	// Get average bandwidth
 	data->bandwidth /= 6;
-  return data;
+	return data;
 }
 
 BenchMarkData* callRandomRead() {
@@ -282,6 +308,7 @@ BenchMarkData* callRandomRead() {
 	BenchMarkData* data = (BenchMarkData*)VirtualAlloc(NULL, sizeof(BenchMarkData*), MEM_COMMIT, PAGE_READWRITE);
 	init_data(data);
 
+	
 	// generate tests for 4K(4,096B) ... 4M(4,194,304B)
 	for (b = 0; b < 6; b++) {
 		// generate tests {trials} times
@@ -296,7 +323,7 @@ BenchMarkData* callRandomRead() {
 
 	// Get average bandwidth
 	data->bandwidth /= 6;
-  return data;
+	return data;
 }
 
 BenchMarkData* callRadomWrite() {
@@ -320,13 +347,14 @@ BenchMarkData* callRadomWrite() {
 
 	// Get average bandwidth
 	data->bandwidth /= 6;
-  return data;
+	return data;
 }
 
-BenchMarkData* main_thr(int d) {
+BenchMarkData* main_thr(int d, int trials) {
+	trialNum = trials;
 	DWORD thread_id;
 	setTestEnv();
-	BenchMarkData* tmp;
+	BenchMarkData* tmp = NULL;
 	
 	if (d == 1) {
 		tmp = callSequentialRead();
@@ -338,11 +366,12 @@ BenchMarkData* main_thr(int d) {
 	else if (d == 3)
 	{
 		tmp = callRandomRead();
+
 	}
 	else if (d == 4)
 	{
 		tmp = callRadomWrite();
 	}
-
+	trialNum = 0;
 	return tmp;
 }
