@@ -1,4 +1,4 @@
 #pragma once
 #include "BenchMarkData.h"
 
-BenchMarkData* main_thr(int d);
+BenchMarkData* main_thr(int d, int trials);
