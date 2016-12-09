@@ -251,15 +251,19 @@ void setTestEnv() {
 	// testFilePath.Format(_T("%s\\SBenchMark%08X.tmp"), testFileDir, timeGetTime());
 }
 
-void checkDiskFreeSpace() {
+void checkDiskFreeSpace(BenchMarkData* data) {
   static CString  cstr;
+  TCHAR Root[4];
   ULARGE_INTEGER freeSpace;
   ULARGE_INTEGER diskSize;
   ULARGE_INTEGER diskFreeSpace;
-  GetDiskFreeSpaceEx("C:\\", &freeSpace, &diskSize, &diskFreeSpace);
-  if ( diskFreeSpace.HighPart == 0 && data->testSize > diskFreeSpace.LowPart ) {
-    AfxMessageBox(cstr.Format(_T("No available space for the test. Aborting...")));
-    return -30000;
+
+  wsprintf(Root, _T("%c:\\"), "C");
+
+  GetDiskFreeSpaceEx(Root, &freeSpace, &diskSize, &diskFreeSpace);
+  if (diskFreeSpace.HighPart == 0 && data->testSize > diskFreeSpace.LowPart) {
+	  cstr.Format(_T("No available space for the test. %f needed. Aborting..."), diskFreeSpace.LowPart);
+	  AfxMessageBox(cstr);
   }
 }
 
