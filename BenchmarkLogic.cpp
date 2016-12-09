@@ -22,8 +22,7 @@ int trialNum = 34;
 
 // ================================  MODULE READ  ===========================================
 
-long long Sequential_read(BenchMarkData* data)
-{
+long long Sequential_read(BenchMarkData* data) {
 	int j;
 	BOOL result;
 	DWORD readPtr;
@@ -209,6 +208,10 @@ long long Random_write(BenchMarkData* data) {
 		result = WriteFile(hFile, bufferPtr, data->pageSize, &writePtr, NULL);
 		FlushFileBuffers(hFile);
 
+    if (!setPtr_result) {
+      //handle error for file pointer
+    }
+
 		if (!result) {
 			// Handle error
 			CString str;
@@ -249,7 +252,15 @@ void setTestEnv() {
 }
 
 void checkDiskFreeSpace() {
-	//GetDiskFreeSpaceEx()
+  static CString  cstr;
+  ULARGE_INTEGER freeSpace;
+  ULARGE_INTEGER diskSize;
+  ULARGE_INTEGER diskFreeSpace;
+  GetDiskFreeSpaceEx("C:\\", &freeSpace, &diskSize, &diskFreeSpace);
+  if ( diskFreeSpace.HighPart == 0 && data->testSize > diskFreeSpace.LowPart ) {
+    AfxMessageBox(cstr.Format(_T("No available space for the test. Aborting...")));
+    return -30000;
+  }
 }
 
 BenchMarkData* callSequentialRead() {
