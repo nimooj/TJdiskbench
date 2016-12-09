@@ -54,9 +54,9 @@ long long Sequential_read(BenchMarkData* data) {
 
 		if (!result) {
 			// Handle error
-			CString str;
-			str.Format(_T("error line 58 , and num of trial is %d and block number is %d"), data->trials, blockNum); // 
-			AfxMessageBox(str);
+		//	CString str;
+		//	str.Format(_T("error line 58 , and num of trial is %d and block number is %d"), data->trials, blockNum); // 
+		//	AfxMessageBox(str);
 		}
 
 	}
@@ -103,16 +103,16 @@ long long Random_read(BenchMarkData* data) {
 
 		if (!setPtr_result) {
 			// handle error for settig rand file ptrCString str;
-			CString str;
-			str.Format(_T("error line 107, and num of trial is %d"), data->trials); // 
-			AfxMessageBox(str);
+	//		CString str;
+	//		str.Format(_T("error line 107, and num of trial is %d"), data->trials); // 
+	//		AfxMessageBox(str);
 		}
 
 		if (!result) {
 			// handle error for read file failure
-			CString str;
-			str.Format(_T("error line 114 , and num of trial is %d"), data->trials); // 
-			AfxMessageBox(str);
+		//	CString str;
+		//	str.Format(_T("error line 114 , and num of trial is %d"), data->trials); // 
+		//	AfxMessageBox(str);
 		}
 	}
 
@@ -162,7 +162,7 @@ long long Sequential_write(BenchMarkData* data) {
 		if (!result) {
 			// Handle errorCString str;
 			CString str;
-			str.Format(_T("error line 165 , and num of trial is %d"), data->trials); // 
+			str.Format(_T("line number is 165, number of trial is %d"), data->trials); // 
 			AfxMessageBox(str);
 		}
 	}
